@@ -1,7 +1,5 @@
 package wolf_parking_system.menu;
 
-import wolf_parking_system.connection.conn;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,24 +13,37 @@ public class Main {
         while (true) {
             System.out.println("WOLFPUB DB");
             System.out.println("Menu:");
-            System.out.println("1. Admin");
-            System.out.println("2. Driver");
-            System.out.println("3. Security");
-            System.out.println("4. EXIT");
+            System.out.println("1. Driver");
+            System.out.println("2. Vehicle");
+            System.out.println("3. Citation");
+            System.out.println("4. ParkingLot");
+            System.out.println("5. Permit");
+            System.out.println("6. Zones");
+            System.out.println("7. Spaces");
+            System.out.println("8. EXIT");
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
                 String choice = reader.readLine();
                 switch (Integer.parseInt(choice)) {
                     case 1:
-                        AdminUI.adminUI(reader);
+                        DriverUI.driverUI(reader);
                         break;
                     case 2:
-                        EditorUI.editorUI(reader);
+                        VehicleUI.vehicleUI(reader);
                         break;
                     case 3:
-                        DistributorUI.distributorUI(reader);
+                        CitationUI.citationUI(reader);
                         break;
-                    case 4:
+                    case 5:
+                        ParkingLotUI.parkinglotUI(reader);
+                        break;
+                    case 6:
+                        ZoneUI.zoneUI(reader);
+                        break;
+                    case 7:
+                        SpacesUI.spacesUI(reader);
+                        break;
+                    case 8:
                         System.exit(0);
                         break;
                 }

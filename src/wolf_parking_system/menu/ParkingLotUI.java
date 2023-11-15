@@ -5,9 +5,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class AdminUI {
+public class ParkingLotUI {
 
-    public static void adminUI(BufferedReader reader) throws NumberFormatException, IOException, SQLException {
+    public static void parkinglotUI(BufferedReader reader) throws NumberFormatException, IOException, SQLException {
 
         String[] main_args = null;
         boolean exit_val = true;
