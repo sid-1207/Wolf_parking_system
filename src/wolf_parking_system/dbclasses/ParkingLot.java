@@ -1,3 +1,4 @@
+package wolf_parking_system.dbclasses;
 public class ParkingLot {
 
     public String LotName;
