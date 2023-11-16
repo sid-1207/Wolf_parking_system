@@ -1,18 +1,20 @@
 package wolf_parking_system.menu;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
 
 public class Main {
-	static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/rlobo";
-	// Put your oracle ID and password here
+    static final String jdbcURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/rlobo";
+    // Put your oracle ID and password here
 
-	protected static Connection connection = null;
-	protected static Statement statement = null;
-	protected static ResultSet result = null;
+    protected static Connection connection = null;
+    protected static Statement statement = null;
+    protected static ResultSet result = null;
+
     public static void main(String[] args) {
-     initialize();
+        initialize();
         boolean x = true;
         while (x) {
             System.out.println("WOLFParking DB");
@@ -25,6 +27,9 @@ public class Main {
             System.out.println("6. Zones");
             System.out.println("7. Spaces");
             System.out.println("8. EXIT");
+
+            System.out.print("Enter your Choice:");
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
                 String choice = reader.readLine();
@@ -60,57 +65,52 @@ public class Main {
             }
 
         }
-   	close();
-   	System.out.println("connection closed");
+        close();
+        System.out.println("connection closed");
     }
 
+    private static void connectToDatabase() throws ClassNotFoundException, SQLException {
+        Class.forName("org.mariadb.jdbc.Driver");
 
+        String user = "rlobo";
+        String password = "200537366";
 
-
-private static void connectToDatabase() throws ClassNotFoundException, SQLException {
-    Class.forName("org.mariadb.jdbc.Driver");
-
-    String user = "rlobo";
-    String password = "200537366";
-
-    connection = DriverManager.getConnection(jdbcURL, user, password);
-    statement = connection.createStatement();
+        connection = DriverManager.getConnection(jdbcURL, user, password);
+        statement = connection.createStatement();
     }
 
-private static void initialize() {
-		try {
-			connectToDatabase();
+    private static void initialize() {
+        try {
+            connectToDatabase();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        
+
     }
 
-
-private static void close() {
-		if (connection != null) {
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (statement != null) {
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		if (result != null) {
-			try {
-				result.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    private static void close() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (result != null) {
+            try {
+                result.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
