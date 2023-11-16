@@ -79,7 +79,7 @@ public class SpacesUI {
             System.out.println("2. Update Space");
             System.out.println("3. Delete Space");
             System.out.println("4. View Space Information");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("5. Custom Update Space");
             System.out.println("6. Back to Main Menu");
 
             System.out.print("Enter your Choice:");

@@ -26,7 +26,7 @@ public class ParkingLotUI {
             System.out.println("2. Update ParkingLot Information");
             System.out.println("3. Delete ParkingLot Information");
             System.out.println("4. View ParkingLot Information");
-            System.out.println("6. Back to Main Menu");
+            System.out.println("5. Back to Main Menu");
 
             System.out.print("Enter your Choice:");
 
