@@ -6,9 +6,61 @@ import java.sql.SQLException;
 import wolf_parking_system.dbclasses.*;
 import java.util.*;
 import wolf_parking_system.crud.CitationCRUD;
+import wolf_parking_system.crud.DriverCRUD;
 import wolf_parking_system.crud.VehicleCRUD;
 
 public class VehicleUI {
+
+    public static String buildQueryUpdate(BufferedReader reader) throws IOException {
+        // Initialize Scanner for user input
+
+        // Create StringBuilder for building the SQL query
+        StringBuilder queryBuilder = new StringBuilder("UPDATE Vehicle SET ");
+
+        // Columns for the SET clause
+        String[] setColumns = { "Model", "Year", "Manufacturer", "Color", "DriverID" };
+
+        for (String column : setColumns) {
+            System.out.print("Enter value for " + column + ": ");
+            String value = reader.readLine().trim();
+
+            if (!value.isEmpty()) {
+                queryBuilder.append(column).append(" = ").append(value).append(", ");
+            }
+        }
+
+        // Remove the trailing comma and space from the SET clause
+        if (queryBuilder.charAt(queryBuilder.length() - 2) == ',') {
+            queryBuilder.delete(queryBuilder.length() - 2, queryBuilder.length());
+        }
+
+        // Add WHERE clause if there are values for the WHERE condition
+        if (queryBuilder.toString().contains(" = ")) {
+            queryBuilder.append(" WHERE ");
+
+            // Columns for the WHERE clause
+            String[] whereColumns = { "CarLicenseNumber", "Model", "Year", "Manufacturer", "Color", "DriverID" };
+
+            // Get values for the WHERE clause
+            for (String column : whereColumns) {
+                System.out.print("WHERE " + column + " =: ");
+                String value = reader.readLine().trim();
+
+                if (!value.isEmpty()) {
+                    queryBuilder.append(column).append(" = ").append(value).append(" AND ");
+                }
+            }
+
+            // Remove the trailing "AND" from the WHERE clause
+            if (queryBuilder.toString().endsWith("AND ")) {
+                queryBuilder.delete(queryBuilder.length() - 4, queryBuilder.length());
+            }
+        }
+        System.out.println(queryBuilder.toString());
+
+        return queryBuilder.toString();
+    }
+
     public static void vehicleUI(BufferedReader reader) throws NumberFormatException, IOException, SQLException {
         String CarLicenseNumber;
         String Model;
@@ -27,7 +79,8 @@ public class VehicleUI {
             System.out.println("2. Update Vehicle Information");
             System.out.println("3. Delete Vehicle Information");
             System.out.println("4. View Vehicle Information");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("5. Custom Update Vehicle Information");
+            System.out.println("6. Back to Main Menu");
             System.out.print("Enter your Choice:");
 
             String input = reader.readLine();
@@ -81,22 +134,33 @@ public class VehicleUI {
                     return;
                 case 4:
 
-                	ArrayList<Vehicle> vehicleList = VehicleCRUD.viewVehicles();
+                    ArrayList<Vehicle> vehicleList = VehicleCRUD.viewVehicles();
 
-                            	if (!vehicleList.isEmpty()) {
-                            	    System.out.println("| CarLicenseNumber | Model | Year | Manufacturer | Color | DriverID |");
-                            	    System.out.println("|-------------------|-------|------|--------------|-------|----------|");
+                    if (!vehicleList.isEmpty()) {
+                        System.out.println("| CarLicenseNumber | Model | Year | Manufacturer | Color | DriverID |");
+                        System.out.println("|-------------------|-------|------|--------------|-------|----------|");
 
-                            	    for (Vehicle vehicle : vehicleList) {
-                            	        System.out.printf("| %-17s | %-5s | %-4s | %-12s | %-5s | %-8s |\n",
-                            	                vehicle.getCarLicenseNumber(), vehicle.getModel(), vehicle.getYear(),
-                            	                vehicle.getManufacturer(), vehicle.getColor(), vehicle.getDriverID());
-                            	    }
-                            	} else {
-                            	    System.out.println("Table is Empty");
-                            	}
-                            	return;
+                        for (Vehicle vehicle : vehicleList) {
+                            System.out.printf("| %-17s | %-5s | %-4s | %-12s | %-5s | %-8s |\n",
+                                    vehicle.getCarLicenseNumber(), vehicle.getModel(), vehicle.getYear(),
+                                    vehicle.getManufacturer(), vehicle.getColor(), vehicle.getDriverID());
+                        }
+                    } else {
+                        System.out.println("Table is Empty");
+                    }
+                    return;
+
                 case 5:
+                    String query = buildQueryUpdate(reader);
+
+                    if (VehicleCRUD.updateVehicle(query)) {
+                        System.out.println("Operation Successful");
+                    } else {
+                        System.out.println("Operation Failed");
+                    }
+                    break;
+
+                case 6:
                     exit_val = false;
                     break;
                 default:

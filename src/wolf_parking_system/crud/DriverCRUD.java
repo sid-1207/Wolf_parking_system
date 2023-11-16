@@ -4,25 +4,26 @@ import java.sql.*;
 import java.util.*;
 import wolf_parking_system.dbclasses.Driver;
 
-
 public class DriverCRUD {
-    private  Statement statement;
+    private Statement statement;
     private Connection connection;
     private ResultSet result;
-    public DriverCRUD(Statement statement,Connection connection,ResultSet result){
-        this.statement=statement;
-        this.connection=connection;
-        this.result=result;
-}
+
+    public DriverCRUD(Statement statement, Connection connection, ResultSet result) {
+        this.statement = statement;
+        this.connection = connection;
+        this.result = result;
+    }
 
     public ArrayList<Driver> viewDriver() {
         try {
-    
+
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("Select * from Driver");
             ArrayList<Driver> list = new ArrayList<>();
             while (rs.next()) {
-                Driver p = new Driver(Long.valueOf(rs.getLong("DriverID")), rs.getString("Name"), rs.getBoolean ("Handicap"), rs.getString("Status"));
+                Driver p = new Driver(Long.valueOf(rs.getLong("DriverID")), rs.getString("Name"),
+                        rs.getBoolean("Handicap"), rs.getString("Status"));
                 list.add(p);
             }
             return list;
@@ -55,11 +56,26 @@ public class DriverCRUD {
         }
     }
 
-    public  Boolean updateDriverInfo(Boolean Handicap,String Name,Long DriverID) {
+    public Boolean updateDriverInfo(String query) {
         try {
-            
+
+            PreparedStatement st = connection.prepareStatement(query);
+            int count = st.executeUpdate();
+            if (count != 0) {
+                return true;
+            }
+            return false;
+            // return Boolean.valueOf(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Boolean.valueOf(false);
+        }
+    }
+
+    public Boolean updateDriverInfo(Boolean Handicap, String Name, Long DriverID) {
+        try {
+
             String query = "Update Driver set Handicap=?,Name=? where DriverID=? ";
-            
 
             try (PreparedStatement st = connection.prepareStatement(query);) {
                 st.setBoolean(1, Handicap);
@@ -69,8 +85,7 @@ public class DriverCRUD {
                 st.executeUpdate();
                 String countQuery = "Select count(*) as count_val from Driver where DriverID=? ";
                 try (PreparedStatement countSt = connection.prepareStatement(countQuery)) {
-                    countSt.setLong(1,DriverID);
-     
+                    countSt.setLong(1, DriverID);
 
                     ResultSet rs = countSt.executeQuery();
 
@@ -82,16 +97,16 @@ public class DriverCRUD {
                     return count != 0;
                 }
             }
-        
+
         } catch (SQLException e) {
             e.printStackTrace();
             return Boolean.valueOf(false);
         }
     }
 
-    public  Boolean deleteDriverInfo(Long DriverID) {
+    public Boolean deleteDriverInfo(Long DriverID) {
         try {
-            
+
             String query = "DELETE FROM Driver WHERE DriverID=?";
             PreparedStatement st = connection.prepareStatement(query);
             st.setLong(1, DriverID);
@@ -103,12 +118,11 @@ public class DriverCRUD {
             return Boolean.valueOf(false);
         }
     }
-    
+
     private boolean driverExists(Long DriverID) throws SQLException {
         String query = "SELECT COUNT(*) AS count_val FROM Driver WHERE DriverID = ?";
         try (PreparedStatement countSt = connection.prepareStatement(query)) {
             countSt.setLong(1, DriverID);
-           
 
             ResultSet rs = countSt.executeQuery();
 
