@@ -30,7 +30,7 @@ public class SpacesCRUD {
         }
     }
 
-        public static boolean AddSpace(String ZoneID, String LotName, Integer SpaceNumber, String SpaceType, Boolean Availability) {
+        public static boolean addSpace(String ZoneID, String LotName, Integer SpaceNumber, String SpaceType, Boolean Availability) {
             boolean state = false;
             try {
                 Connection conn = conn.getConnection();
@@ -50,7 +50,7 @@ public class SpacesCRUD {
             }
         }
 
-        public static Boolean updateSpaces(String ZoneID, String LotName, Integer SpaceNumber, String SpaceType, Boolean Availability) {
+        public static Boolean updateSpace(String ZoneID, String LotName, Integer SpaceNumber, String SpaceType, Boolean Availability) {
             try {
                 Connection conn = conn.getConnection();
                 String query = "UPDATE Spaces SET SpaceType=?, Availability=? WHERE (ZoneID ="+ZoneID+ " AND LotName ="+ LotName+ "AND Space Number = " + SpaceNumber + ")";
