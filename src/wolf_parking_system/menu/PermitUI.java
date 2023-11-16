@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import wolf_parking_system.crud.CitationCRUD;
 import wolf_parking_system.crud.PermitCRUD;
 
 public class PermitUI {
@@ -29,7 +28,7 @@ public class PermitUI {
 
             switch (Integer.parseInt(input)) {
                 case 1:
-                  System.out.println("Enter | separated String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate");
+                  System.out.println("Enter | separated String PermitID, String PermitType, Time ExpirationTime, Date StartDate, Date EndDate");
                   args = reader.readLine().split("[|]");
                   PermitID = args[0];
                   PermitType = args[1];
@@ -44,13 +43,14 @@ public class PermitUI {
                   }
                   break;
                 case 2:
-                  System.out.println("Enter | separated String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate");
+                  System.out.println("Enter | separated String PermitID, String PermitType, Time ExpirationTime, Date StartDate, Date EndDate");
                   args = reader.readLine().split("[|]");
                   PermitID = String.valueOf(args[0]);
                   PermitType = args[1];
                   ExpirationTime = String.valueOf(args[2]);
                   StartDate = args[3];
-
+                  EndDate = args[4];
+                  
                   if (PermitCRUD.updatePermitInfo(PermitID, PermitType, ExpirationTime, StartDate, EndDate)) {
                     System.out.println("Operation Successful");
                   } else {
@@ -58,13 +58,9 @@ public class PermitUI {
                   }
                   break;
                 case 3:
-                  System.out.println("Enter | separated String PermitID, String PermitType, String ExpirationTime, String StartDate");
+                  System.out.println("Enter String PermitID");
                   args = reader.readLine().split("[|]");
                   PermitID = String.valueOf(args[0]);
-                  PermitType = args[1];
-                  ExpirationTime = String.valueOf(args[2]);
-                  StartDate = args[3];
-                  EndDate = args[4];
 
                   if (PermitCRUD.deletePermitInfo(PermitID)) {
                     System.out.println("Operation Successful");
