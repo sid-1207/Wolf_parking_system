@@ -25,7 +25,7 @@ public class ZoneCRUD {
     }
     public static boolean enterZoneInfo(String ZoneID, String LotName) throws SQLException {
         try {
-//            Connection conn = DbConnection.getConnection();
+//          Connection conn = DbConnection.getConnection();
             String query = "INSERT INTO Zone (ZoneID, LotName) VALUES (?,?)";
             PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, ZoneID);
