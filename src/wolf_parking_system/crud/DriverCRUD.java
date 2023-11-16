@@ -1,13 +1,12 @@
 package wolf_parking_system.crud;
 
 import java.sql.*;
-import java.sql.Driver;
 import java.util.*;
-import wolf_parking_system.dbclasses.*;
+import wolf_parking_system.dbclasses.Driver;
 
 
 public class DriverCRUD {
-    
+
     public static ArrayList<Driver> viewDriver() {
         try {
             Connection conn = DbConnection.getConnection();
@@ -25,7 +24,7 @@ public class DriverCRUD {
         }
     }
 
-    public static Boolean insertDriver(Long DriverID, String Name, Boolean Handicap, String Status) {
+    public static Boolean enterDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
         try {
             Connection conn = DbConnection.getConnection();
             String query = "insert into Driver (DriverID, Name, Handicap, Status) values (?,?,?,?)";
@@ -46,7 +45,7 @@ public class DriverCRUD {
         }
     }
 
-    public static Boolean updateDriver(Long DriverID, String Name, Boolean Handicap, String Status) {
+    public static Boolean updateDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
         try {
             Connection conn = DbConnection.getConnection();
             String query = "Update Driver set Handicap=?  where DriverID=?, Name=?";
@@ -73,7 +72,7 @@ public class DriverCRUD {
         }
     }
 
-    public static Boolean deleteArticle(Long DriverID) {
+    public static Boolean deleteDriverInfo(Long DriverID) {
         try {
             Connection conn = DbConnection.getConnection();
             String query = "DELETE FROM Driver WHERE DriverID=?";
