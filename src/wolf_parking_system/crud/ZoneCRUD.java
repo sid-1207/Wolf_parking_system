@@ -23,7 +23,7 @@ public class ZoneCRUD {
             return null;
         }
     }
-    public static boolean enterZoneInfo(Connection conn, String ZoneID, String LotName) throws SQLException {
+    public static boolean enterZoneInfo(String ZoneID, String LotName) throws SQLException {
         try {
 //            Connection conn = DbConnection.getConnection();
             String query = "INSERT INTO Zone (ZoneID, LotName) VALUES (?,?)";
