@@ -19,7 +19,7 @@ String LotName,Address;
         String[] args;
         boolean exit_val = true;
         String[] main_args = null;
-        ParkingLotCRUD parkinglot= new ParkingLotCRUD(Main.statement, Main.connection);
+        ParkingLotCRUD parkinglot= new ParkingLotCRUD(Main.statement, Main.connection ,Main.result);
         while (exit_val) {
 
         System.out.println("1. Insert ParkingLot Information");

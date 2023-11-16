@@ -14,29 +14,53 @@ public class ParkingLotCRUD {
     // view parking lots
     private  Statement statement;
     private Connection connection;
-    public ParkingLotCRUD(Statement statement,Connection connection){
+    private ResultSet result;
+    public ParkingLotCRUD(Statement statement,Connection connection,ResultSet result){
         this.statement=statement;
         this.connection=connection;
-
-    }
+        this.result=result;
+}
    
     
     public  ArrayList<ParkingLot> viewParkingLots() {
         try {
           
            
-            ResultSet rs = statement.executeQuery("Select * from ARTICLE");
+            ResultSet rs = statement.executeQuery("Select * from ParkingLot");
             ArrayList<ParkingLot> list = new ArrayList<>();
             while (rs.next()) {
-                ParkingLot p = new ParkingLot(rs.getString("LotName"),rs.getString("Address"));
+                ParkingLot p = new ParkingLot(rs.getString("Name"),rs.getString("Address"));
                 list.add(p);
             }
             return list;
         } catch (SQLException e) {
             e.printStackTrace();
+            if (connection != null) {
+    			try {
+    				connection.close();
+    			} catch (SQLException f) {
+    				f.printStackTrace();
+    			}
+    		}
+    		if (statement != null) {
+    			try {
+    				statement.close();
+    			} catch (SQLException w) {
+    				w.printStackTrace();
+    			}
+    		}
+    		if (result != null) {
+    			try {
+    				result.close();
+    			} catch (SQLException z) {
+    				z.printStackTrace();
+    			}
+    		}
+    	}
             return null;
+            
         }
-    }
+    
 
 // insert in parking lots
         public  Boolean insertParkinglot(String LotName,String Address) {
@@ -75,9 +99,9 @@ public class ParkingLotCRUD {
     
                 }
                 if (count!=0){
-                    return Boolean.valueOf(true);;
+                    return Boolean.valueOf(true);
                 }
-                return Boolean.valueOf(false);;
+                return Boolean.valueOf(false);
                 //return Boolean.valueOf(true);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -106,4 +130,4 @@ public class ParkingLotCRUD {
 
     
 
-}
+
