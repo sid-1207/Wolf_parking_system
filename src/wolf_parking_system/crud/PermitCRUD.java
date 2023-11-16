@@ -12,23 +12,25 @@ import java.util.ArrayList;
 import wolf_parking_system.dbclasses.*;
 
 public class PermitCRUD {
-    private  Statement statement;
+    private Statement statement;
     private Connection connection;
     private ResultSet result;
-    public PermitCRUD(Statement statement,Connection connection,ResultSet result){
-        this.statement=statement;
-        this.connection=connection;
-        this.result=result;
-}
 
-    public  ArrayList<Permit> viewPermit() {
+    public PermitCRUD(Statement statement, Connection connection, ResultSet result) {
+        this.statement = statement;
+        this.connection = connection;
+        this.result = result;
+    }
+
+    public ArrayList<Permit> viewPermit() {
         try {
-           
+
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("Select * from Permit");
             ArrayList<Permit> list = new ArrayList<>();
             while (rs.next()) {
-                Permit p = new Permit(rs.getString("PermitID"), rs.getString("PermitType"), rs.getString ("ExpirationTime"), rs.getString("StartDate"), rs.getString("EndDate"));
+                Permit p = new Permit(rs.getString("PermitID"), rs.getString("PermitType"),
+                        rs.getString("ExpirationTime"), rs.getString("StartDate"), rs.getString("EndDate"));
                 list.add(p);
             }
             return list;
@@ -76,22 +78,23 @@ public class PermitCRUD {
                 countSt.setString(1,PermitID);
                 ResultSet rs = countSt.executeQuery();
 
-                int count = 0;
-                while (rs.next()) {
-                    count = rs.getInt("count_val");
-                }
+                    int count = 0;
+                    while (rs.next()) {
+                        count = rs.getInt("count_val");
+                    }
 
-                return count != 0;
-            }       
-        } }catch (SQLException e) {
+                    return count != 0;
+                }
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
             return Boolean.valueOf(false);
         }
     }
 
-    public  Boolean deletePermitInfo(String PermitID) {
+    public Boolean deletePermitInfo(String PermitID) {
         try {
-        
+
             String query = "DELETE FROM Permit WHERE PermitID=?";
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, PermitID);
