@@ -42,10 +42,9 @@ public class DriverCRUD {
             st.setBoolean(3, Handicap);
             st.setString(4, Status);
             st.executeUpdate();
-            ResultSet rs = st.executeQuery(); 
-            long driver_id = 0;
+            ResultSet rs = st.executeQuery("select  DriverID from Driver"); //Is this for displaying data being inserted or not
             while (rs.next())
-                driver_id = rs.getLong("DriverID");
+                 DriverID= rs.getLong("DriverID");
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -53,27 +52,34 @@ public class DriverCRUD {
         }
     }
 
-    public  Boolean updateDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
+    public  Boolean updateDriverInfo(Boolean Handicap,Long DriverID, String Name) {
         try {
             
-            String query = "Update Driver set Handicap=?  where DriverID=?, Name=?";
-            PreparedStatement st = connection.prepareStatement(query);
-            st.setBoolean(1, Handicap);
-            st.setLong(2, DriverID);
-            st.setString(3, Name);
-            // st.setString(4, Status);
-            st.executeUpdate();
-            ResultSet rs = st.executeQuery("Select count(*) as count_val from Driver where DriverID="+ DriverID + " AND Name =" + Name);
-            int count = 0;
-            while (rs.next()) {
-                count = rs.getInt("count_val");
+            String query = "Update Driver set Handicap=?  where DriverID=? AND Name=?";
+            
 
+            try (PreparedStatement st = connection.prepareStatement(query);) {
+                st.setBoolean(1, Handicap);
+                st.setLong(2, DriverID);
+                st.setString(3, Name);
+                // st.setString(4, Status);
+                st.executeUpdate();
+                String countQuery = "Select count(*) as count_val from Driver where DriverID=? AND Name=?";
+                try (PreparedStatement countSt = connection.prepareStatement(countQuery)) {
+                    countSt.setLong(1,DriverID);
+                    countSt.setString(2,Name);
+
+                    ResultSet rs = countSt.executeQuery();
+
+                    int count = 0;
+                    while (rs.next()) {
+                        count = rs.getInt("count_val");
+                    }
+
+                    return count != 0;
+                }
             }
-            if (count!=0){
-                return  true;
-            }
-            return false;
-            //return Boolean.valueOf(true);
+        
         } catch (SQLException e) {
             e.printStackTrace();
             return Boolean.valueOf(false);

@@ -60,11 +60,11 @@ String LotName,Address;
                 return;
 
             case 3:
-                System.out.println("Enter | separated String LotName,String Address");
+                System.out.println("Enter | separated String LotName");
                 args = reader.readLine().split("[|]");
                 LotName = args[0];
-                Address= args[1];
-                if (parkinglot.deleteParkingLot(LotName,Address)) {
+              
+                if (parkinglot.deleteParkingLot(LotName)) {
                     System.out.println("Operation Successful");
                 } else {
                     System.out.println("Operation Failed");

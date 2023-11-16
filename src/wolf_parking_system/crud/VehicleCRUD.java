@@ -43,8 +43,13 @@ public class VehicleCRUD {
     public  boolean AddVehicle(String CarLicenseNumber,String Model,Integer Year,String Manufacturer,String Color,Long DriverID) {
         boolean state = false;
         try {
+        	 if (!driverExists(DriverID)) {
+                 System.out.println("Driver with ID " + DriverID + " does not exist.");
+                 return false;
+             }
+
             
-            String query = "Insert into Vehicle(CarLicenseNumber, Model, Year, Manufacturer, Color, DriverID) values (?,?,?,?,?)";
+            String query = "Insert into Vehicle(CarLicenseNumber, Model, Year, Manufacturer, Color, DriverID) values (?,?,?,?,?,?)";
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, CarLicenseNumber);
             st.setString(2, Model);
@@ -62,34 +67,58 @@ public class VehicleCRUD {
     }
 
     //UPDATE
-    public  Boolean updateVehicle(String CarLicenseNumber,String Model,Integer Year,String Manufacturer,String Color,Long DriverID) {
+    public Boolean updateVehicle(String CarLicenseNumber, String Model, Integer Year, String Manufacturer, String Color, Long DriverID) {
         try {
-           
-            String query = "UPDATE Vehicle SET Model=?, Year=?, Manufacturer=?, Color=?, DriverID=? WHERE (CarLicenseNumber ="+CarLicenseNumber+")";
-            PreparedStatement st = connection.prepareStatement(query);
-            st.setString(1, Model);
-            st.setInt(2, Year);
-            st.setString(3, Manufacturer);
-            st.setString(4, Color);
-            st.setLong(5, DriverID);
-            st.executeUpdate();
-            return Boolean.valueOf(true);
+            if (!driverExists(DriverID)) {
+                System.out.println("Driver with ID " + DriverID + " does not exist.");
+                return false;
+            }
+            String query = "UPDATE Vehicle SET Model=?, Year=?, Manufacturer=?, Color=?, DriverID=? WHERE CarLicenseNumber=?";
+            try (PreparedStatement st = connection.prepareStatement(query)) {
+                st.setString(1, Model);
+                st.setInt(2, Year);
+                st.setString(3, Manufacturer);
+                st.setString(4, Color);
+                st.setLong(5, DriverID);
+                st.setString(6, CarLicenseNumber); // Use a placeholder for CarLicenseNumber
+                st.executeUpdate();
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return Boolean.valueOf(false);
+            return false;
         }
     }
+
 
     //DELETE
     public Boolean deleteVehicle(String CarLicenseNumber) {
         try {
-        
-            Statement st = connection.createStatement();
-            st.executeUpdate("DELETE FROM Vehicle WHERE (CarLicenseNumber=" + CarLicenseNumber);
-            return Boolean.valueOf(true);
+            String query = "DELETE FROM Vehicle WHERE CarLicenseNumber=?";
+            try (PreparedStatement st = connection.prepareStatement(query)) {
+                st.setString(1, CarLicenseNumber);
+                st.executeUpdate();
+                return true;
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            return Boolean.valueOf(false);
+            return false;
         }
-    }    
+    }
+
+
+private boolean driverExists(Long driverID) throws SQLException {
+    String query = "SELECT COUNT(*) AS count_val FROM Driver WHERE DriverID = ?";
+    try (PreparedStatement countSt = connection.prepareStatement(query)) {
+        countSt.setLong(1, driverID);
+        ResultSet rs = countSt.executeQuery();
+
+        int count = 0;
+        while (rs.next()) {
+            count = rs.getInt("count_val");
+        }
+
+        return count != 0;
+    }
+}
 }

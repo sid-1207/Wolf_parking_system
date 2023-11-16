@@ -47,26 +47,25 @@ public class DriverUI {
                   }
                   break;
                 case 2:
-                  System.out.println("Enter | separated Long DriverID, String Name, Boolean Handicap, String Status");
+                  System.out.println("Enter | separated Boolean Handicap,Long DriverID,String Name ");
                   args = reader.readLine().split("[|]");
-                  DriverID = Long.valueOf(args[0]);
-                  Name = args[1];
-                  Handicap = Boolean.valueOf(args[2]);
-                  Status = args[3];
+                  Handicap = Boolean.valueOf(args[0]);
+                  DriverID = Long.valueOf(args[1]);
+                  Name = args[2];
+                 
+                  
 
-                  if (DriverCRUD.updateDriverInfo(DriverID, Name, Handicap, Status)) {
+                  if (DriverCRUD.updateDriverInfo(Handicap,DriverID, Name)) {
                     System.out.println("Operation Successful");
                   } else {
                         System.out.println("Operation Failed");
                   }
                   break;
                 case 3:
-                  System.out.println("Enter | separated Long DriverID, String Name, Boolean Handicap, String Status");
+                  System.out.println("Enter DriverID");
                   args = reader.readLine().split("[|]");
                   DriverID = Long.valueOf(args[0]);
-                  Name = args[1];
-                  Handicap = Boolean.valueOf(args[2]);
-                  Status = args[3];
+
 
                   if (DriverCRUD.deleteDriverInfo(DriverID)) {
                     System.out.println("Operation Successful");

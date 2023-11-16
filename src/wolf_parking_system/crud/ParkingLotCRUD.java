@@ -83,47 +83,48 @@ public class ParkingLotCRUD {
 
 //update article  
     
-        public  Boolean updateParkingLot(String LotName,String Address) {
+        public Boolean updateParkingLot(String LotName, String Address) {
             try {
-                
-    //            Update ARTICLE set Text='Qwerty' where PID=2 AND ArticleID=3;
-                String query = "Update ParkingLot set LotName=? where Address=? ";
-                PreparedStatement st = connection.prepareStatement(query);
-                st.setString(1, LotName);
-                st.setString(2, Address);
-                st.executeUpdate();
-                ResultSet rs = st.executeQuery("Select count(*) as count_val from ParkingLot where Address="+ Address);
-                int count = 0;
-                while (rs.next()) {
-                    count = rs.getInt("count_val");
-    
+                String query = "UPDATE ParkingLot SET Address=? WHERE LotName=?";
+                try (PreparedStatement st = connection.prepareStatement(query)) {
+                    st.setString(1, Address);
+                    st.setString(2, LotName);
+                    st.executeUpdate();
+
+                    // Check if the update was successful
+                    String countQuery = "SELECT COUNT(*) AS count_val FROM ParkingLot WHERE Address=?";
+                    try (PreparedStatement countSt = connection.prepareStatement(countQuery)) {
+                        countSt.setString(1, Address);
+
+                        ResultSet rs = countSt.executeQuery();
+                        int count = 0;
+                        while (rs.next()) {
+                            count = rs.getInt("count_val");
+                        }
+
+                        return count != 0;
+                    }
                 }
-                if (count!=0){
-                    return Boolean.valueOf(true);
-                }
-                return Boolean.valueOf(false);
-                //return Boolean.valueOf(true);
             } catch (SQLException e) {
                 e.printStackTrace();
-                return Boolean.valueOf(false);
+                return false;
             }
         }
     
-        public Boolean deleteParkingLot(String LotName,String Address) {
+        public Boolean deleteParkingLot(String LotName) {
             try {
-               
-                String query = "DELETE FROM ParkingLot WHERE Address ";
-                PreparedStatement st = connection.prepareStatement(query);
-                st.setString(1, LotName);
-                st.setString(2, Address);
-                st.executeUpdate();
-                return true;
-    
+                String query = "DELETE FROM ParkingLot WHERE LotName=?";
+                try (PreparedStatement st = connection.prepareStatement(query)) {
+                    st.setString(1, LotName);
+                    st.executeUpdate();
+                    return true;
+                }
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                return Boolean.valueOf(false);
+                return false;
             }
         }
+
 //Lot name already exists
     private boolean lotNameExists(String lotName) throws SQLException {
     String query = "SELECT LotName FROM ParkingLot WHERE LotName = ?";

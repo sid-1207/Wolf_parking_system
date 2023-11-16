@@ -61,23 +61,24 @@ public class PermitCRUD {
     public Boolean updatePermitInfo(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
         try {
            
-            String query = "Update Permit set EndDate =?  where PermitID=?";
-            PreparedStatement st = connection.prepareStatement(query);
+            String query = "Update Permit SET EndDate =?  WHERE PermitID=?";
+            try(PreparedStatement st = connection.prepareStatement(query)){
             st.setString(1, EndDate);
             st.setString(2, PermitID);
             st.executeUpdate();
-            ResultSet rs = st.executeQuery("Select count(*) as count_val from Permit where PermitID="+ PermitID + " AND PermitType =" + PermitType + "AND ExpirationTime =" + ExpirationTime + "AND StartDate =" + StartDate);
-            int count = 0;
-            while (rs.next()) {
-                count = rs.getInt("count_val");
+            String countQuery = "SELECT COUNT(*) AS count_val FROM Permit WHERE PermitID=?";
+            try (PreparedStatement countSt = connection.prepareStatement(countQuery)) {
+                countSt.setString(1,PermitID);
+                ResultSet rs = countSt.executeQuery();
 
-            }
-            if (count!=0){
-                return  true;
-            }
-            return false;
-            //return Boolean.valueOf(true);
-        } catch (SQLException e) {
+                int count = 0;
+                while (rs.next()) {
+                    count = rs.getInt("count_val");
+                }
+
+                return count != 0;
+            }       
+        } }catch (SQLException e) {
             e.printStackTrace();
             return Boolean.valueOf(false);
         }
@@ -90,7 +91,7 @@ public class PermitCRUD {
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, PermitID);
             st.executeUpdate();
-            return true;
+            return Boolean.valueOf(true);
 
         } catch (SQLException ex) {
             ex.printStackTrace();
