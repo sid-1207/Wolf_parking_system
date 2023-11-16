@@ -27,7 +27,7 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean insertPermit(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
+    public static Boolean enterPermitInfo(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
         try {
             Connection conn = DbConnection.getConnection();
             String query = "insert into Permit (PermitID, PermitType, ExpirationTime, StartDate, EndDate) values (?,?,?,?,?)";
@@ -49,7 +49,7 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean updatePermit(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
+    public static Boolean updatePermitInfo(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
         try {
             Connection conn = DbConnection.getConnection();
             String query = "Update Permit set EndDate =?  where PermitID=?";
@@ -74,7 +74,7 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean deleteArticle(String PermitID) {
+    public static Boolean deletePermitInfo(String PermitID) {
         try {
             Connection conn = DbConnection.getConnection();
             String query = "DELETE FROM Permit WHERE PermitID=?";
