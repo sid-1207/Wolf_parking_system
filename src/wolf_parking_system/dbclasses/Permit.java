@@ -1,5 +1,5 @@
-import java.time.*;
 package wolf_parking_system.dbclasses;
+import java.time.*;
 
 public class Permit {
 
