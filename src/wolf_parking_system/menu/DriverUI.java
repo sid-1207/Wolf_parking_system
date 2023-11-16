@@ -3,7 +3,10 @@ package wolf_parking_system.menu;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
+
+import wolf_parking_system.crud.CitationCRUD;
 import wolf_parking_system.crud.DriverCRUD;
+import wolf_parking_system.crud.VehicleCRUD;
 import wolf_parking_system.crud.ZoneCRUD;
 import wolf_parking_system.crud.DriverCRUD;
 
@@ -16,7 +19,7 @@ public class DriverUI {
         String[] main_args = null;
         String [] args = null;
         boolean exit_val = true;
-
+        DriverCRUD DriverCRUD= new DriverCRUD(Main.statement, Main.connection ,Main.result);
 
         while (exit_val) {
             System.out.println("Driver operations");

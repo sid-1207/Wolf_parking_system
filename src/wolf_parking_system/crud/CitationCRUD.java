@@ -13,11 +13,18 @@ import wolf_parking_system.dbclasses.Citation1;
 
 public class CitationCRUD {
        // view citations
-    public static ArrayList<Citation1> getCitation() {
+       private  Statement statement;
+       private Connection connection;
+       private ResultSet result;
+       public CitationCRUD(Statement statement,Connection connection,ResultSet result){
+           this.statement=statement;
+           this.connection=connection;
+           this.result=result;
+   }
+    public  ArrayList<Citation1> getCitation() {
        
         try {
-            Connection conn =conn.getConnection();//i dont know the error
-            Statement st = conn.createStatement();
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("Select * from Citation1");
             ArrayList<Citation1> list = new ArrayList<>();
             while (rs.next()) {
@@ -38,12 +45,12 @@ public class CitationCRUD {
     }
 
 // insert in Citation
-        public static Boolean addCitation(String CitationNumber,String PaymentStatus,Boolean AppealStatus,Date CitationDate,Time CitationTime, String LotName, String Category) {
+        public Boolean addCitation(String CitationNumber,String PaymentStatus,Boolean AppealStatus,Date CitationDate,Time CitationTime, String LotName, String Category) {
             try {
-                Connection conn = conn.getConnection();//i dont know the error
+           
                 String query = "INSERT INTO Citation1 (CitationNumber, PaymentStatus, AppealStatus, CitationDate, CitationTime, LotName, Category) VALUES (?,?,?,?,?,?,?);\n" + //
                         "";
-                PreparedStatement st = conn.prepareStatement(query);
+                PreparedStatement st = connection.prepareStatement(query);
                 st.setString(1, CitationNumber);
                 st.setString(2, PaymentStatus);
                 st.setBoolean(3, AppealStatus);
@@ -64,12 +71,12 @@ public class CitationCRUD {
 
 //update Citation
     
-        public static Boolean updateCitation(String CitationNumber,String PaymentStatus,Boolean AppealStatus,Date CitationDate,Time CitationTime, String LotName, String Category) {
+        public Boolean updateCitation(String CitationNumber,String PaymentStatus,Boolean AppealStatus,Date CitationDate,Time CitationTime, String LotName, String Category) {
             try {
-                Connection conn = conn.getConnection();
+                
                 String query= "UPDATE Citation1 SET PaymentStatus=?,AppealStatus=?, CitationDate=?,CitationTime=?, LotName=?, Category=? WHERE  CitationNumber=?";
 
-                PreparedStatement st = conn.prepareStatement(query);
+                PreparedStatement st = connection.prepareStatement(query);
             
                 st.setString(1, PaymentStatus);
                 st.setBoolean(2, AppealStatus);

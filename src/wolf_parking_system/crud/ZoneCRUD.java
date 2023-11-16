@@ -7,10 +7,18 @@ import wolf_parking_system.*;
 import wolf_parking_system.dbclasses.Zone;
 
 public class ZoneCRUD {
-    public static ArrayList<Zone> viewZone() {
+    private  Statement statement;
+    private Connection connection;
+    private ResultSet result;
+    public ZoneCRUD(Statement statement,Connection connection,ResultSet result){
+        this.statement=statement;
+        this.connection=connection;
+        this.result=result;
+}
+    public  ArrayList<Zone> viewZone() {
         try {
-            Connection conn = DbConnection.getConnection();
-            Statement st = conn.createStatement();
+            
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("Select * from Zone");
             ArrayList<Zone> list = new ArrayList<>();
             while (rs.next()) {
@@ -23,11 +31,11 @@ public class ZoneCRUD {
             return null;
         }
     }
-    public static boolean enterZoneInfo(String ZoneID, String LotName) throws SQLException {
+    public  boolean enterZoneInfo(String ZoneID, String LotName) throws SQLException {
         try {
 //          Connection conn = DbConnection.getConnection();
             String query = "INSERT INTO Zone (ZoneID, LotName) VALUES (?,?)";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, ZoneID);
             st.setString(2, LotName);
             st.executeUpdate();
@@ -39,12 +47,12 @@ public class ZoneCRUD {
         }
     }
 
-    public static Boolean updateZoneInfo(String ZoneID, String LotName) {
+    public  Boolean updateZoneInfo(String ZoneID, String LotName) {
         try {
-            Connection conn = DbConnection.getConnection();
+            
             String query= "UPDATE Zone SET ZoneID = ? WHERE LotName=?";
 
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, ZoneID);
             st.setString(2, LotName);
             st.executeUpdate();
@@ -63,10 +71,10 @@ public class ZoneCRUD {
         }
     }
 
-    public static Boolean deleteZoneInfo(String ZoneID, String LotName) {
+    public  Boolean deleteZoneInfo(String ZoneID, String LotName) {
         try {
-            Connection conn = DbConnection.getConnection();
-            Statement st = conn.createStatement();
+            
+            Statement st = connection.createStatement();
             st.executeUpdate("DELETE FROM Zone WHERE (ZoneID="+ZoneID+" AND LotName="+LotName+")");
             return Boolean.valueOf(true);
         } catch (SQLException ex) {

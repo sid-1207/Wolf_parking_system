@@ -6,11 +6,19 @@ import wolf_parking_system.dbclasses.Driver;
 
 
 public class DriverCRUD {
+    private  Statement statement;
+    private Connection connection;
+    private ResultSet result;
+    public DriverCRUD(Statement statement,Connection connection,ResultSet result){
+        this.statement=statement;
+        this.connection=connection;
+        this.result=result;
+}
 
-    public static ArrayList<Driver> viewDriver() {
+    public ArrayList<Driver> viewDriver() {
         try {
-            Connection conn = DbConnection.getConnection();
-            Statement st = conn.createStatement();
+    
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("Select * from Driver");
             ArrayList<Driver> list = new ArrayList<>();
             while (rs.next()) {
@@ -24,11 +32,11 @@ public class DriverCRUD {
         }
     }
 
-    public static Boolean enterDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
+    public  Boolean enterDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
         try {
-            Connection conn = DbConnection.getConnection();
+          
             String query = "insert into Driver (DriverID, Name, Handicap, Status) values (?,?,?,?)";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setLong(1, DriverID);
             st.setString(2, Name);
             st.setBoolean(3, Handicap);
@@ -45,11 +53,11 @@ public class DriverCRUD {
         }
     }
 
-    public static Boolean updateDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
+    public  Boolean updateDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
         try {
-            Connection conn = DbConnection.getConnection();
+            
             String query = "Update Driver set Handicap=?  where DriverID=?, Name=?";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setBoolean(1, Handicap);
             st.setLong(2, DriverID);
             st.setString(3, Name);
@@ -72,11 +80,11 @@ public class DriverCRUD {
         }
     }
 
-    public static Boolean deleteDriverInfo(Long DriverID) {
+    public  Boolean deleteDriverInfo(Long DriverID) {
         try {
-            Connection conn = DbConnection.getConnection();
+            
             String query = "DELETE FROM Driver WHERE DriverID=?";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setLong(1, DriverID);
             st.executeUpdate();
             return true;

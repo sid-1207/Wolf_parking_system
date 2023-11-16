@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 
 import wolf_parking_system.crud.CitationCRUD;
+import wolf_parking_system.crud.ZoneCRUD;
 
 public class CitationUI {
     public static void citationUI(BufferedReader reader) throws NumberFormatException, IOException, SQLException {
@@ -21,6 +22,7 @@ public class CitationUI {
         String[] args;
         boolean exit_val = true;
         String[] main_args = null;
+        CitationCRUD CitationCRUD= new CitationCRUD(Main.statement, Main.connection ,Main.result);
         while (exit_val) {
 
         System.out.println("1. Enter Citation Information");

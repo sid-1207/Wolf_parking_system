@@ -12,12 +12,20 @@ import wolf_parking_system.dbclasses.Zone;
 import wolf_parking_system.connection.*;
 
 public class VehicleCRUD {
+    private  Statement statement;
+    private Connection connection;
+    private ResultSet result;
+    public VehicleCRUD(Statement statement,Connection connection,ResultSet result){
+        this.statement=statement;
+        this.connection=connection;
+        this.result=result;
+}
     
     //READ
-    public static ArrayList<Vehicle> viewVehicles() {
+    public ArrayList<Vehicle> viewVehicles() {
         try {
-            Connection conn = conn.getConnection();
-            Statement st = conn.createStatement();
+   
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Vehicle;");
             ArrayList<Vehicle> list = new ArrayList<>();
             while (rs.next()) {
@@ -32,12 +40,12 @@ public class VehicleCRUD {
     }
 
     //CREATE
-    public static boolean AddVehicle(String CarLicenseNumber,String Model,Integer Year,String Manufacturer,String Color,Long DriverID) {
+    public  boolean AddVehicle(String CarLicenseNumber,String Model,Integer Year,String Manufacturer,String Color,Long DriverID) {
         boolean state = false;
         try {
-            Connection conn = conn.getConnection();
+            
             String query = "Insert into Vehicle(CarLicenseNumber, Model, Year, Manufacturer, Color, DriverID) values (?,?,?,?,?)";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, CarLicenseNumber);
             st.setString(2, Model);
             st.setInt(3, Year);
@@ -54,11 +62,11 @@ public class VehicleCRUD {
     }
 
     //UPDATE
-    public static Boolean updateVehicle(String CarLicenseNumber,String Model,Integer Year,String Manufacturer,String Color,Long DriverID) {
+    public  Boolean updateVehicle(String CarLicenseNumber,String Model,Integer Year,String Manufacturer,String Color,Long DriverID) {
         try {
-            Connection conn = conn.getConnection();
+           
             String query = "UPDATE Vehicle SET Model=?, Year=?, Manufacturer=?, Color=?, DriverID=? WHERE (CarLicenseNumber ="+CarLicenseNumber+")";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, Model);
             st.setInt(2, Year);
             st.setString(3, Manufacturer);
@@ -73,10 +81,10 @@ public class VehicleCRUD {
     }
 
     //DELETE
-    public static Boolean deleteVehicle(String CarLicenseNumber) {
+    public Boolean deleteVehicle(String CarLicenseNumber) {
         try {
-            Connection conn = conn.getConnection();
-            Statement st = conn.createStatement();
+        
+            Statement st = connection.createStatement();
             st.executeUpdate("DELETE FROM Vehicle WHERE (CarLicenseNumber=" + CarLicenseNumber);
             return Boolean.valueOf(true);
         } catch (SQLException ex) {

@@ -10,10 +10,19 @@ import java.util.ArrayList;
 import wolf_parking_system.dbclasses.*;
 
 public class PermitCRUD {
-    public static ArrayList<Permit> viewPermit() {
+    private  Statement statement;
+    private Connection connection;
+    private ResultSet result;
+    public PermitCRUD(Statement statement,Connection connection,ResultSet result){
+        this.statement=statement;
+        this.connection=connection;
+        this.result=result;
+}
+
+    public  ArrayList<Permit> viewPermit() {
         try {
-            Connection conn = DbConnection.getConnection();
-            Statement st = conn.createStatement();
+           
+            Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("Select * from Permit");
             ArrayList<Permit> list = new ArrayList<>();
             while (rs.next()) {
@@ -27,11 +36,11 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean insertPermit(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
+    public Boolean enterPermitInfo(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
         try {
-            Connection conn = DbConnection.getConnection();
+        
             String query = "insert into Permit (PermitID, PermitType, ExpirationTime, StartDate, EndDate) values (?,?,?,?,?)";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, PermitID);
             st.setString(2, PermitType);
             st.setString(3, ExpirationTime);
@@ -49,11 +58,11 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean updatePermit(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
+    public Boolean updatePermitInfo(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
         try {
-            Connection conn = DbConnection.getConnection();
+           
             String query = "Update Permit set EndDate =?  where PermitID=?";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, EndDate);
             st.setString(2, PermitID);
             st.executeUpdate();
@@ -74,11 +83,11 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean deleteArticle(String PermitID) {
+    public  Boolean deletePermitInfo(String PermitID) {
         try {
-            Connection conn = DbConnection.getConnection();
+        
             String query = "DELETE FROM Permit WHERE PermitID=?";
-            PreparedStatement st = conn.prepareStatement(query);
+            PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, PermitID);
             st.executeUpdate();
             return true;

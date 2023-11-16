@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
 
+
 import wolf_parking_system.crud.ZoneCRUD;
 
 
@@ -14,6 +15,7 @@ public class ZoneUI {
         String[] args;
         boolean exit_val = true;
         String[] main_args = null;
+        ZoneCRUD ZoneCRUD= new ZoneCRUD(Main.statement, Main.connection ,Main.result);
         while (exit_val) {
 
         System.out.println("1. Enter Zone Information");
