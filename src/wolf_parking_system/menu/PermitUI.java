@@ -80,6 +80,9 @@ public class PermitUI {
                     System.out.println("Operation Failed");
                   } 
                   break;
+                case 5:
+                  exit_val= false;
+                  break;
 
                 default:
                   System.out.println("Enter a valid choice");

@@ -81,6 +81,9 @@ public class DriverUI {
                   } else {
                     System.out.println("Operation Failed");
                   } 
+                  case 5:
+                  exit_val= false;
+                  break;
 
                 default:
                   System.out.println("Enter a valid choice");

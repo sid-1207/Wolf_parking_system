@@ -82,6 +82,9 @@ public class VehicleUI {
                     System.out.println("Operation Failed");
                 }
                 return;
+            case 5:
+                exit_val= false;
+                break;
             default:
                 System.out.println("Enter a valid choice");
 

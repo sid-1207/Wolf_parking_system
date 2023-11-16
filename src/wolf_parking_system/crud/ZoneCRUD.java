@@ -47,36 +47,47 @@ public class ZoneCRUD {
         }
     }
 
-    public  Boolean updateZoneInfo(String ZoneID, String LotName) {
+    public Boolean updateZoneInfo(String ZoneID, String LotName) {
         try {
-            
-            String query= "UPDATE Zone SET ZoneID = ? WHERE LotName=?";
+            String query = "UPDATE Zone SET ZoneID = ? WHERE LotName = ?";
 
-            PreparedStatement st = connection.prepareStatement(query);
-            st.setString(1, ZoneID);
-            st.setString(2, LotName);
-            st.executeUpdate();
-            ResultSet rs = st.executeQuery("Select count(*) as count_val from Zone where ZoneID="+ZoneID);
-            int count = 0;
-            while (rs.next()) {
-                count = rs.getInt("count_val");
+            try (PreparedStatement st = connection.prepareStatement(query)) {
+                st.setString(1, ZoneID);
+                st.setString(2, LotName);
+                st.executeUpdate();
+
+                String countQuery = "SELECT COUNT(*) AS count_val FROM Zone WHERE LotName = ? AND ZoneID = ?";
+                try (PreparedStatement countSt = connection.prepareStatement(countQuery)) {
+                    countSt.setString(1, LotName);
+                    countSt.setString(2, ZoneID);
+
+                    ResultSet rs = countSt.executeQuery();
+
+                    int count = 0;
+                    while (rs.next()) {
+                        count = rs.getInt("count_val");
+                    }
+
+                    return count != 0;
+                }
             }
-            if (count!=0){
-                return  true;
-            }
-            return false;
         } catch (SQLException e) {
             e.printStackTrace();
-            return Boolean.valueOf(false);
+            return false;
         }
     }
+
 
     public  Boolean deleteZoneInfo(String ZoneID, String LotName) {
         try {
             
-            Statement st = connection.createStatement();
-            st.executeUpdate("DELETE FROM Zone WHERE (ZoneID="+ZoneID+" AND LotName="+LotName+")");
-            return Boolean.valueOf(true);
+
+        	String query = "DELETE FROM Zone WHERE ZoneID = ? AND LotName = ?";
+        	PreparedStatement st = connection.prepareStatement(query);
+        	  st.setString(1, ZoneID);
+              st.setString(2, LotName);
+              int rowsAffected = st.executeUpdate();
+        	return Boolean.valueOf(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return Boolean.valueOf(false);

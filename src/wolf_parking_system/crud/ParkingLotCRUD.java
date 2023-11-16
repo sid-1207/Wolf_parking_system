@@ -1,10 +1,6 @@
 package wolf_parking_system.crud;
 
 import java.sql.*;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import wolf_parking_system.dbclasses.*;
 import wolf_parking_system.connection.*;
@@ -29,7 +25,7 @@ public class ParkingLotCRUD {
             ResultSet rs = statement.executeQuery("Select * from ParkingLot");
             ArrayList<ParkingLot> list = new ArrayList<>();
             while (rs.next()) {
-                ParkingLot p = new ParkingLot(rs.getString("Name"),rs.getString("Address"));
+                ParkingLot p = new ParkingLot(rs.getString("LotName"),rs.getString("Address"));
                 list.add(p);
             }
             return list;
@@ -65,6 +61,10 @@ public class ParkingLotCRUD {
 // insert in parking lots
         public  Boolean insertParkinglot(String LotName,String Address) {
             try {
+                 if (lotNameExists(LotName)) {
+            System.out.println("LotName already exists.");
+            return false;
+        }
                 
                 String query = "insert into ParkingLot(LotName, Address ) values (?,?)";
                 PreparedStatement st = connection.prepareStatement(query);
@@ -124,10 +124,19 @@ public class ParkingLotCRUD {
                 return Boolean.valueOf(false);
             }
         }
+//Lot name already exists
+    private boolean lotNameExists(String lotName) throws SQLException {
+    String query = "SELECT LotName FROM ParkingLot WHERE LotName = ?";
+    PreparedStatement checkSt = connection.prepareStatement(query);
+    checkSt.setString(1, lotName);
+    ResultSet rs = checkSt.executeQuery();
+    return rs.next(); // If next() is true, LotName already exists
+}
     }
    
     
 
     
+
 
 
