@@ -1,7 +1,9 @@
+
 package wolf_parking_system.crud;
 
 import java.sql.Connection;
-import java.time.*;
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -36,21 +38,20 @@ public class PermitCRUD {
         }
     }
 
-    public Boolean enterPermitInfo(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
+    public Boolean enterPermitInfo(String PermitID, String PermitType, Time ExpirationTime, Date startDate, Date endDate) {
         try {
-        
             String query = "insert into Permit (PermitID, PermitType, ExpirationTime, StartDate, EndDate) values (?,?,?,?,?)";
             PreparedStatement st = connection.prepareStatement(query);
             st.setString(1, PermitID);
             st.setString(2, PermitType);
-            st.setString(3, ExpirationTime);
-            st.setString(4, StartDate);
-            st.setString(5, EndDate);
+            st.setTime(3, ExpirationTime); // Use st.setTime for Time type
+            st.setDate(4, startDate); // Use st.setDate for Date type
+            st.setDate(5, endDate); // Use st.setDate for Date type
             st.executeUpdate();
-            ResultSet rs = st.executeQuery();
-            String permit_id = "";
-            while (rs.next())
-                permit_id = rs.getString("PermitID");
+            
+            // No need to execute another query to get PermitID, you can get it from the input parameter
+            // String permit_id = PermitID;
+
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -58,13 +59,17 @@ public class PermitCRUD {
         }
     }
 
-    public Boolean updatePermitInfo(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
+
+    public Boolean updatePermitInfo(String PermitID, String PermitType, Time ExpirationTime, Date startDate, Date endDate) {
         try {
            
-            String query = "Update Permit SET EndDate =?  WHERE PermitID=?";
+            String query = "Update Permit SET PermitType=?,ExpirationTime=?,startDate=?,endDate =?  WHERE PermitID=?";
             try(PreparedStatement st = connection.prepareStatement(query)){
-            st.setString(1, EndDate);
-            st.setString(2, PermitID);
+            	st.setString(1, PermitType);
+            	st.setTime(2, ExpirationTime);
+            	st.setDate(3, startDate);
+            	st.setDate(4, endDate);
+            st.setString(5, PermitID);
             st.executeUpdate();
             String countQuery = "SELECT COUNT(*) AS count_val FROM Permit WHERE PermitID=?";
             try (PreparedStatement countSt = connection.prepareStatement(countQuery)) {

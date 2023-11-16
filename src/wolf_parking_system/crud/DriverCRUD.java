@@ -32,19 +32,22 @@ public class DriverCRUD {
         }
     }
 
-    public  Boolean enterDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
+    public Boolean enterDriverInfo(Long DriverID, String Name, Boolean Handicap, String Status) {
         try {
-          
-            String query = "insert into Driver (DriverID, Name, Handicap, Status) values (?,?,?,?)";
-            PreparedStatement st = connection.prepareStatement(query);
-            st.setLong(1, DriverID);
-            st.setString(2, Name);
-            st.setBoolean(3, Handicap);
-            st.setString(4, Status);
-            st.executeUpdate();
-            ResultSet rs = st.executeQuery("select  DriverID from Driver"); //Is this for displaying data being inserted or not
-            while (rs.next())
-                 DriverID= rs.getLong("DriverID");
+            if (driverExists(DriverID)) {
+                System.out.println("Driver with ID " + DriverID + " already exists.");
+                return false;
+            }
+
+            String query = "INSERT INTO Driver (DriverID, Name, Handicap, Status) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement st = connection.prepareStatement(query)) {
+                st.setLong(1, DriverID);
+                st.setString(2, Name);
+                st.setBoolean(3, Handicap);
+                st.setString(4, Status);
+
+                st.executeUpdate();
+            }
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -52,22 +55,22 @@ public class DriverCRUD {
         }
     }
 
-    public  Boolean updateDriverInfo(Boolean Handicap,Long DriverID, String Name) {
+    public  Boolean updateDriverInfo(Boolean Handicap,String Name,Long DriverID) {
         try {
             
-            String query = "Update Driver set Handicap=?  where DriverID=? AND Name=?";
+            String query = "Update Driver set Handicap=?,Name=? where DriverID=? ";
             
 
             try (PreparedStatement st = connection.prepareStatement(query);) {
                 st.setBoolean(1, Handicap);
-                st.setLong(2, DriverID);
-                st.setString(3, Name);
+                st.setString(2, Name);
+                st.setLong(3, DriverID);
                 // st.setString(4, Status);
                 st.executeUpdate();
-                String countQuery = "Select count(*) as count_val from Driver where DriverID=? AND Name=?";
+                String countQuery = "Select count(*) as count_val from Driver where DriverID=? ";
                 try (PreparedStatement countSt = connection.prepareStatement(countQuery)) {
                     countSt.setLong(1,DriverID);
-                    countSt.setString(2,Name);
+     
 
                     ResultSet rs = countSt.executeQuery();
 
@@ -98,6 +101,23 @@ public class DriverCRUD {
         } catch (SQLException ex) {
             ex.printStackTrace();
             return Boolean.valueOf(false);
+        }
+    }
+    
+    private boolean driverExists(Long DriverID) throws SQLException {
+        String query = "SELECT COUNT(*) AS count_val FROM Driver WHERE DriverID = ?";
+        try (PreparedStatement countSt = connection.prepareStatement(query)) {
+            countSt.setLong(1, DriverID);
+           
+
+            ResultSet rs = countSt.executeQuery();
+
+            int count = 0;
+            while (rs.next()) {
+                count = rs.getInt("count_val");
+            }
+
+            return count != 0;
         }
     }
 }

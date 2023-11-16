@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.util.ArrayList;
+import wolf_parking_system.dbclasses.*;
 
 import wolf_parking_system.dbclasses.Citation1;
 
@@ -21,6 +22,9 @@ public class CitationCRUD {
            this.connection=connection;
            this.result=result;
    }
+       
+
+      
     public  ArrayList<Citation1> getCitation() {
        
         try {
@@ -44,10 +48,35 @@ public class CitationCRUD {
         }
     }
 
+    public int getFeeByCategory(String category) {
+        try {
+            String query = "SELECT Fee FROM Citation2 WHERE Category = ?";
+            
+            try (PreparedStatement st = connection.prepareStatement(query)) {
+                st.setString(1, category);
+
+                ResultSet rs = st.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("Fee");
+                } else {
+                    // Handle the case where no fee is found for the category
+                    return 0;  // You can choose an appropriate default value
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;  // Handle the exception and return an appropriate default value
+        }
+    }
+
 // insert in Citation
         public Boolean addCitation(String CitationNumber,String PaymentStatus,Boolean AppealStatus,Date CitationDate,Time CitationTime, String LotName, String Category) {
             try {
-           
+           	 if (citationexists(CitationNumber)) {
+                 System.out.println("CitationNumber " + CitationNumber + " already exist.");
+                 return false;
+             }
                 String query = "INSERT INTO Citation1 (CitationNumber, PaymentStatus, AppealStatus, CitationDate, CitationTime, LotName, Category) VALUES (?,?,?,?,?,?,?);\n" + //
                         "";
                 PreparedStatement st = connection.prepareStatement(query);
@@ -103,6 +132,20 @@ public class CitationCRUD {
                 return Boolean.valueOf(false);
             }
         }
+        public  Boolean deleteCitation(String CitationNumber) {
+            try {
+                
+
+            	String query = "DELETE FROM Citation1 WHERE CitationNumber=?";
+            	PreparedStatement st = connection.prepareStatement(query);
+            	  st.setString(1, CitationNumber);
+                  int rowsAffected = st.executeUpdate();
+            	return Boolean.valueOf(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return Boolean.valueOf(false);
+            }
+        }
     
         // public static Boolean deleteParkingLot(String LotName,String Address) {
         //     try {
@@ -119,4 +162,20 @@ public class CitationCRUD {
         //         return Boolean.valueOf(false);
         //     }
         // }
+        private boolean citationexists(String CitationNumber) throws SQLException {
+            String query = "SELECT COUNT(*) AS count_val FROM Citation1 WHERE CitationNumber= ?";
+            try (PreparedStatement countSt = connection.prepareStatement(query)) {
+                countSt.setString(1,CitationNumber);
+                ResultSet rs = countSt.executeQuery();
+
+
+
+                int count = 0;
+                while (rs.next()) {
+                    count = rs.getInt("count_val");
+                }
+
+                return count != 0;
+            }
+        }
 }

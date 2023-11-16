@@ -4,6 +4,7 @@ import java.beans.Statement;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.*;
 
 import wolf_parking_system.crud.ParkingLotCRUD;
 
@@ -71,11 +72,18 @@ public class ParkingLotUI {
                 return;
             case 4:
                 // CHECK IF YOU WANT TO DISPLAY ALL (ZONEID,LOTNAME) TUPLES OR ALL ZONEIDS FOR A PARKING LOT
-                if (!parkinglot.viewParkingLots().isEmpty()) {
-                    System.out.println("Operation Successful");
-                } else {
-                    System.out.println("Operation Failed");
-                }
+            	ArrayList<ParkingLot>parkingLotList = parkinglot.viewParkingLots();
+
+            	if (! parkingLotList.isEmpty()) {
+            		System.out.println("| LotName | Address |");
+            		System.out.println("|--------|---------|");
+           	    for (ParkingLot parkingLot : parkingLotList) {
+           	    	System.out.printf("| %-9s | %-20s |\n", parkingLot.getLotName(), parkingLot.getAddress());
+
+}
+            	} else {
+            	    System.out.println("Table is Empty");
+            	}
                 return;
             case 5:
                 exit_val= false;

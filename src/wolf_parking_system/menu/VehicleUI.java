@@ -3,7 +3,8 @@ package wolf_parking_system.menu;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
-
+import wolf_parking_system.dbclasses.*;
+import java.util.*;
 import wolf_parking_system.crud.CitationCRUD;
 import wolf_parking_system.crud.VehicleCRUD;
 
@@ -79,12 +80,22 @@ public class VehicleUI {
                     }
                     return;
                 case 4:
-                    if (!VehicleCRUD.viewVehicles().isEmpty()) {
-                        System.out.println("Operation Successful");
-                    } else {
-                        System.out.println("Operation Failed");
-                    }
-                    return;
+
+                	ArrayList<Vehicle> vehicleList = VehicleCRUD.viewVehicles();
+
+                            	if (!vehicleList.isEmpty()) {
+                            	    System.out.println("| CarLicenseNumber | Model | Year | Manufacturer | Color | DriverID |");
+                            	    System.out.println("|-------------------|-------|------|--------------|-------|----------|");
+
+                            	    for (Vehicle vehicle : vehicleList) {
+                            	        System.out.printf("| %-17s | %-5s | %-4s | %-12s | %-5s | %-8s |\n",
+                            	                vehicle.getCarLicenseNumber(), vehicle.getModel(), vehicle.getYear(),
+                            	                vehicle.getManufacturer(), vehicle.getColor(), vehicle.getDriverID());
+                            	    }
+                            	} else {
+                            	    System.out.println("Table is Empty");
+                            	}
+                            	return;
                 case 5:
                     exit_val = false;
                     break;

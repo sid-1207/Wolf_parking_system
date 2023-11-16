@@ -3,7 +3,8 @@ package wolf_parking_system.menu;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
-
+import java.util.*;
+import wolf_parking_system.dbclasses.*;
 import wolf_parking_system.crud.CitationCRUD;
 import wolf_parking_system.crud.DriverCRUD;
 import wolf_parking_system.crud.VehicleCRUD;
@@ -49,15 +50,16 @@ public class DriverUI {
                   }
                   break;
                 case 2:
-                  System.out.println("Enter | separated Boolean Handicap,Long DriverID,String Name ");
+                  System.out.println("Enter | separated Boolean Handicap,String Name,Long DriverID");
                   args = reader.readLine().split("[|]");
                   Handicap = Boolean.valueOf(args[0]);
-                  DriverID = Long.valueOf(args[1]);
-                  Name = args[2];
+                  Name = args[1];
+                  DriverID = Long.valueOf(args[2]);
+                  
                  
                   
 
-                  if (DriverCRUD.updateDriverInfo(Handicap,DriverID, Name)) {
+                  if (DriverCRUD.updateDriverInfo(Handicap,Name,DriverID)) {
                     System.out.println("Operation Successful");
                   } else {
                         System.out.println("Operation Failed");
@@ -77,11 +79,20 @@ public class DriverUI {
           break;
 
         case 4:
-          if (!DriverCRUD.viewDriver().isEmpty()) {
-            System.out.println("Operation Successful");
-          } else {
-            System.out.println("Operation Failed");
-          }
+
+ArrayList<Driver> driverList = DriverCRUD.viewDriver();
+
+                	if (! driverList.isEmpty()) {
+                		System.out.println("| DriverID | Name | Handicap | Status |");
+                		System.out.println("|--------|---------|---------|---------|");
+               	    for (Driver driver : driverList) {
+               	    	System.out.printf("| %-9s | %-20s | %-8s | %-10s |\n", driver.getDriverID(), driver.getName(), driver.getHandicap(), driver.getStatus());
+
+    }
+                	} else {
+                	    System.out.println("Table is Empty");
+                	}
+                    return;
         case 5:
           exit_val = false;
           break;

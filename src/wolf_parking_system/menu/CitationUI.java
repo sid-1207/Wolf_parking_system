@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
-
+import wolf_parking_system.dbclasses.*;
 import wolf_parking_system.crud.CitationCRUD;
 import wolf_parking_system.crud.ZoneCRUD;
+import java.util.*;
 
 public class CitationUI {
     public static void citationUI(BufferedReader reader) throws NumberFormatException, IOException, SQLException {
@@ -78,13 +79,38 @@ public class CitationUI {
 
                 case 3:
                     // CODE FOR DELETE CITATION
-                    return;
+                	 System.out.println("Enter | separated String CitationNumber");
+                     args = reader.readLine().split("[|]");
+                     CitationNumber=args[0];
+
+                     if (CitationCRUD.deleteCitation(CitationNumber)) {
+                       System.out.println("Operation Successful");
+                     } else {
+                           System.out.println("Operation Failed");
+                     }
+                     break;
                 case 4:
-                    if (!CitationCRUD.getCitation().isEmpty()) {
-                        System.out.println("Operation Successful");
-                    } else {
-                        System.out.println("Operation Failed");
-                    }
+                	ArrayList<Citation1> citationList = CitationCRUD.getCitation();
+
+                	if (!citationList.isEmpty()) {
+                		//CitationNumber, PaymentStatus, AppealStatus, CitationDate, CitationTime, LotName, Category
+                	
+                		System.out.println("| CitationNumber | PaymentStatus | AppealStatus | CitationDate | CitationTime | LotName | Category |Fee|");
+                		System.out.println("|--------|---------|---------|---------|---------|---------|---------|");
+               	    for (Citation1 citation : citationList) {
+               	 	int fee = CitationCRUD.getFeeByCategory(citation.Category);
+               	    	System.out.printf("| %-20s | %-15s | %-13b | %-15s | %-15s | %-20s | %-20s|%-3d |\n",
+                                citation.getCitationNumber(),
+                                citation.getPaymentStatus(),
+                                citation.getAppealStatus(),
+                                citation.getCitationDate(),
+                                citation.getCitationTime(),
+                                citation.getLotName(),
+                                citation.getCategory(),fee);
+    }
+                	} else {
+                	    System.out.println("Table is Empty");
+                	}
                     return;
                 case 5:
                     exit_val = false;

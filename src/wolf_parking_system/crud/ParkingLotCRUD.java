@@ -85,6 +85,10 @@ public class ParkingLotCRUD {
     
         public Boolean updateParkingLot(String LotName, String Address) {
             try {
+            	 if (!lotNameExists(LotName)) {
+                     System.out.println("LotName doesnot exists.");
+                     return false;
+                 }
                 String query = "UPDATE ParkingLot SET Address=? WHERE LotName=?";
                 try (PreparedStatement st = connection.prepareStatement(query)) {
                     st.setString(1, Address);
@@ -112,7 +116,10 @@ public class ParkingLotCRUD {
         }
     
         public Boolean deleteParkingLot(String LotName) {
-            try {
+            try { if (!lotNameExists(LotName)) {
+                System.out.println("LotName doesnot exists.");
+                return false;
+            }
                 String query = "DELETE FROM ParkingLot WHERE LotName=?";
                 try (PreparedStatement st = connection.prepareStatement(query)) {
                     st.setString(1, LotName);

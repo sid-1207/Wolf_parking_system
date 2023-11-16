@@ -1,5 +1,6 @@
 package wolf_parking_system.crud;
-
+import java.util.Map;
+import java.util.Set;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,11 +39,61 @@ public class SpacesCRUD {
         }
     }
 
+
+
+//    public Boolean updatecustomizedSpaces(String SpaceType, Boolean Availability, Map<String, Object> conditions) {
+//        try {
+//            StringBuilder queryBuilder = new StringBuilder("UPDATE Spaces SET SpaceType=?, Availability=?");
+//
+//            if (conditions != null && !conditions.isEmpty()) {
+//                queryBuilder.append(" WHERE ");
+//                Set<Map.Entry<String, Object>> entrySet = conditions.entrySet();
+//
+//                int conditionCount = 0;
+//                for (Map.Entry<String, Object> entry : entrySet) {
+//                    if (conditionCount > 0) {
+//                        queryBuilder.append(" AND ");
+//                    }
+//
+//                    queryBuilder.append(entry.getKey()).append("=?");
+//                    conditionCount++;
+//                }
+//            }
+//
+//            try (PreparedStatement st = connection.prepareStatement(queryBuilder.toString())) {
+//                st.setString(1, SpaceType);
+//                st.setBoolean(2, Availability);
+//
+//                int parameterIndex = 3;
+//                for (Object value : conditions.values()) {
+//                    st.setObject(parameterIndex, value);
+//                    parameterIndex++;
+//                }
+//
+//                // Execute the update
+//                int rowsAffected = st.executeUpdate();
+//
+//                // Check if any rows were affected to determine if the update was successful
+//                return rowsAffected > 0;
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+
+    
     public boolean AddSpace(String ZoneID, String LotName, Integer SpaceNumber, String SpaceType, Boolean Availability) {
         try {
             // Check if the specified ZoneID and LotName exist in the Zone table
             if (!zoneExists(ZoneID, LotName)) {
                 System.out.println("Zone with ID " + ZoneID + " and LotName " + LotName + " does not exist.");
+                return false;
+            }
+            // Check if the specified ZoneID, LotName, and SpaceNumber combination already exists
+            if (spaceExists(ZoneID, LotName, SpaceNumber)) {
+                System.out.println("Space with ZoneID " + ZoneID + ", LotName " + LotName +
+                        ", and SpaceNumber " + SpaceNumber + " already exists.");
                 return false;
             }
 
@@ -118,5 +169,17 @@ public class SpacesCRUD {
                 return count != 0;
             }
         }
+
+private boolean spaceExists(String ZoneID, String LotName, Integer SpaceNumber) throws SQLException {
+    String query = "SELECT * FROM Spaces WHERE ZoneID = ? AND LotName = ? AND SpaceNumber = ?";
+    try (PreparedStatement st = connection.prepareStatement(query)) {
+        st.setString(1, ZoneID);
+        st.setString(2, LotName);
+        st.setInt(3, SpaceNumber);
+        try (ResultSet rs = st.executeQuery()) {
+            return rs.next();
+        }
+    }
+}
 }
 

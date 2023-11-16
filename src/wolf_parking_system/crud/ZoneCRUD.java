@@ -49,7 +49,7 @@ public class ZoneCRUD {
 
     public Boolean updateZoneInfo(String ZoneID, String LotName) {
         try {
-            String query = "UPDATE Zone SET ZoneID = ? WHERE LotName = ?";
+            String query = "UPDATE Zone SET LotName = ? WHERE ZoneID = ?";
 
             try (PreparedStatement st = connection.prepareStatement(query)) {
                 st.setString(1, ZoneID);

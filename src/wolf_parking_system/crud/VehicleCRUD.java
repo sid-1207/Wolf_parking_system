@@ -47,6 +47,10 @@ public class VehicleCRUD {
                  System.out.println("Driver with ID " + DriverID + " does not exist.");
                  return false;
              }
+        	 if (carExists(CarLicenseNumber)) {
+                 System.out.println("CarLicenseNumber " + CarLicenseNumber + " already exist.");
+                 return false;
+             }
 
             
             String query = "Insert into Vehicle(CarLicenseNumber, Model, Year, Manufacturer, Color, DriverID) values (?,?,?,?,?,?)";
@@ -96,7 +100,11 @@ public class VehicleCRUD {
         try {
             String query = "DELETE FROM Vehicle WHERE CarLicenseNumber=?";
             try (PreparedStatement st = connection.prepareStatement(query)) {
-                st.setString(1, CarLicenseNumber);
+            	 if (!carExists(CarLicenseNumber)) {
+                     System.out.println("CarLicenseNumber " + CarLicenseNumber + " not found.");
+                     return false;
+                 }
+            	st.setString(1, CarLicenseNumber);
                 st.executeUpdate();
                 return true;
             }
@@ -112,6 +120,22 @@ private boolean driverExists(Long driverID) throws SQLException {
     try (PreparedStatement countSt = connection.prepareStatement(query)) {
         countSt.setLong(1, driverID);
         ResultSet rs = countSt.executeQuery();
+
+        int count = 0;
+        while (rs.next()) {
+            count = rs.getInt("count_val");
+        }
+
+        return count != 0;
+    }
+}
+private boolean carExists(String CarLicenseNumber) throws SQLException {
+    String query = "SELECT COUNT(*) AS count_val FROM Vehicle WHERE CarLicenseNumber= ?";
+    try (PreparedStatement countSt = connection.prepareStatement(query)) {
+        countSt.setString(1, CarLicenseNumber);
+        ResultSet rs = countSt.executeQuery();
+
+
 
         int count = 0;
         while (rs.next()) {
