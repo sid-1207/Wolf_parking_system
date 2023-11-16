@@ -35,7 +35,7 @@ public class DriverCRUD {
             st.setBoolean(3, Handicap);
             st.setString(4, Status);
             st.executeUpdate();
-            ResultSet rs = st.executeQuery(); //Is this for displaying data being inserted or not
+            ResultSet rs = st.executeQuery(); 
             long driver_id = 0;
             while (rs.next())
                 driver_id = rs.getLong("DriverID");
@@ -49,14 +49,14 @@ public class DriverCRUD {
     public static Boolean updateDriver(Long DriverID, String Name, Boolean Handicap, String Status) {
         try {
             Connection conn = DbConnection.getConnection();
-            String query = "Update Driver set DriverID=?, Name =?, Handicap=?, Status =?  where DriverID=? and Name =? and Handicap = ? and Status = ?";
+            String query = "Update Driver set Handicap=?  where DriverID=?, Name=?";
             PreparedStatement st = conn.prepareStatement(query);
-            st.setLong(1, DriverID);
-            st.setString(2, Name);
-            st.setBoolean(3, Handicap);
-            st.setString(4, Status);
+            st.setBoolean(1, Handicap);
+            st.setLong(2, DriverID);
+            st.setString(3, Name);
+            // st.setString(4, Status);
             st.executeUpdate();
-            ResultSet rs = st.executeQuery("Select count(*) as count_val from Driver where DriverID="+ DriverID + " AND Name =" + Name + "AND Handicap =" + Handicap + "AND Status =" + Status);
+            ResultSet rs = st.executeQuery("Select count(*) as count_val from Driver where DriverID="+ DriverID + " AND Name =" + Name);
             int count = 0;
             while (rs.next()) {
                 count = rs.getInt("count_val");

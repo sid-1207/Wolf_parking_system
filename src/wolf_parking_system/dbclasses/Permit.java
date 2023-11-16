@@ -5,11 +5,11 @@ public class Permit {
 
     public String PermitID;
     public String PermitType;
-    public LocalTime ExpirationTime;
-    public LocalDate StartDate;
-    public LocalDate EndDate;
+    public String ExpirationTime;
+    public String StartDate;
+    public String EndDate;
 
-    public Permit(String PermitID,String PermitType, LocalTime ExpirationTime, LocalDate StartDate, LocalDate EndDate)
+    public Permit(String PermitID,String PermitType, String ExpirationTime, String StartDate, String EndDate)
     {
         this.PermitID = PermitID;
         this.PermitType = PermitType;
@@ -19,14 +19,14 @@ public class Permit {
     }
     public String getPermitID() { return this.PermitID; }
     public String getPermitType() { return this.PermitType; }
-    public LocalTime getExpirationTime() { return this.ExpirationTime; }
-    public LocalDate getStartDate() { return this.StartDate; }
-    public LocalDate getEndDate() { return this.EndDate; }
+    public String getExpirationTime() { return this.ExpirationTime; }
+    public String getStartDate() { return this.StartDate; }
+    public String getEndDate() { return this.EndDate; }
 
     public void setPermitID( String PermitID) {  this.PermitID =  PermitID;}
     public void setPermitType(String PermitType) {  this.PermitType =  PermitType;}
-    public LocalTime setExpirationTime(LocalTime ExpirationTime) { return this.ExpirationTime; }
-    public LocalDate setStartDate(LocalDate StartDate) { return this.StartDate; }
-    public LocalDate setEndDate(LocalDate EndDate) { return this.EndDate; }
+    public void setExpirationTime(String ExpirationTime) {  this.ExpirationTime = ExpirationTime; }
+    public void setStartDate(String StartDate) {  this.StartDate = StartDate; }
+    public void setEndDate(String EndDate) {  this.EndDate = EndDate; }
 
 }

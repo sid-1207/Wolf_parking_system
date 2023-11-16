@@ -17,7 +17,7 @@ public class PermitCRUD {
             ResultSet rs = st.executeQuery("Select * from Permit");
             ArrayList<Permit> list = new ArrayList<>();
             while (rs.next()) {
-                Permit p = new Permit(Long.valueOf(rs.getString("PermitID")), rs.getString("PermitType"), rs.getLocalTime ("ExpirationTime"), rs.getLocalDate("StartDate"), rs.getLocalDate("EndDate"));
+                Permit p = new Permit(rs.getString("PermitID"), rs.getString("PermitType"), rs.getString ("ExpirationTime"), rs.getString("StartDate"), rs.getString("EndDate"));
                 list.add(p);
             }
             return list;
@@ -27,19 +27,19 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean insertPermit(String PermitID, String PermitType, LocalTime ExpirationTime, LocalDate StartDate, LocalDate EndDate) {
+    public static Boolean insertPermit(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
         try {
             Connection conn = DbConnection.getConnection();
             String query = "insert into Permit (PermitID, PermitType, ExpirationTime, StartDate, EndDate) values (?,?,?,?,?)";
             PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, PermitID);
             st.setString(2, PermitType);
-            st.setLocalTime(3, ExpirationTime);
-            st.setLocalDate(4, StartDate);
-            st.setLocalDate(5, EndDate);
+            st.setString(3, ExpirationTime);
+            st.setString(4, StartDate);
+            st.setString(5, EndDate);
             st.executeUpdate();
             ResultSet rs = st.executeQuery();
-            String permit_id = 0;
+            String permit_id = "";
             while (rs.next())
                 permit_id = rs.getString("PermitID");
             return true;
@@ -49,16 +49,13 @@ public class PermitCRUD {
         }
     }
 
-    public static Boolean updatePermit(String PermitID, String PermitType, LocalTime ExpirationTime, LocalDate StartDate, LocalDate EndDate) {
+    public static Boolean updatePermit(String PermitID, String PermitType, String ExpirationTime, String StartDate, String EndDate) {
         try {
             Connection conn = DbConnection.getConnection();
-            String query = "Update Permit set PermitID=?, PermitType =?, ExpirationTime=?, StartDate =?  where PermitID=? and PermitType =? and ExpirationTime = ? and StartDate = ?";
+            String query = "Update Permit set EndDate =?  where PermitID=?";
             PreparedStatement st = conn.prepareStatement(query);
-            st.setLong(1, PermitID);
-            st.setString(2, PermitType);
-            st.setBoolean(3, ExpirationTime);
-            st.setString(4, StartDate);
-            st.setString(4, EndDate);
+            st.setString(1, EndDate);
+            st.setString(2, PermitID);
             st.executeUpdate();
             ResultSet rs = st.executeQuery("Select count(*) as count_val from Permit where PermitID="+ PermitID + " AND PermitType =" + PermitType + "AND ExpirationTime =" + ExpirationTime + "AND StartDate =" + StartDate);
             int count = 0;
