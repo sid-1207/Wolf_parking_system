@@ -19,7 +19,7 @@ public class DriverUI {
     StringBuilder queryBuilder = new StringBuilder("UPDATE Driver SET ");
 
     // Columns for the SET clause
-    String[] setColumns = { "Name", "Handicap", "Status" };
+    String[] setColumns = { "DriverID", "Name", "Handicap", "Status" };
 
     for (String column : setColumns) {
       System.out.print("Enter value for " + column + ": ");
